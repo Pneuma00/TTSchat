@@ -1,0 +1,12 @@
+{
+  "name": "TTSchat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Pneuma714/TTSchat.git",
+  "author": "Pneuma <syca0714@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^3.0.1"
+  }
+}
