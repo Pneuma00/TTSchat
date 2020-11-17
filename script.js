@@ -6,5 +6,5 @@ document.querySelector('#send').addEventListener('click', () => {
 })
 
 socket.on('msgReceive', data => {
-    document.querySelector('#chat').value += data + '\n'
+    document.querySelector('#chat').value += data.content + '\n'
 })
