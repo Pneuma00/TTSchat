@@ -11,9 +11,11 @@ document.querySelector('#send').addEventListener('click', () => {
 })
 
 socket.on('msgReceive', msg => {
+    console.log(`${msg.user} : ${msg.content}`)
     document.querySelector('#chat').value += `${msg.user} : ${msg.content}\n`
 })
 
 socket.on('userJoinedChannel', user => {
+    console.log(`${user.nickname} joined`)
     document.querySelector('#chat').value += `${user.nickname} joined.\n`
 })

@@ -19,12 +19,12 @@ io.on('connection', socket => {
     socket.on('joinChannel', (channel, user) => {
         socket.join(channel)
         console.log(`${user.nickname} joined ${channel} channel.`)
-        io.in(channel).emit('userJoinedChannel', { nickname: user.nickname })
+        io.to(channel).emit('userJoinedChannel', { nickname: user.nickname })
     })
 
     socket.on('msgSend', msg => {
         console.log(`${msg.user} : ${msg.content}`)
-        io.in(msg.channel).emit('msgReceive', { content: msg.content, user: msg.user })
+        io.to(msg.channel).emit('msgReceive', { content: msg.content, user: msg.user })
     })
 })
 
