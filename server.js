@@ -16,12 +16,15 @@ io.on('connection', socket => {
         console.log('User disconnected')
     })
 
-    socket.on('msgSend', data => {
-        console.log(data.content)
-        socket.emit('msgReceive', { content: data.content })
+    socket.on('joinChannel', (channel, user) => {
+        socket.join(channel)
+        console.log(`${user.nickname} joined ${channel} channel.`)
+    })
+
+    socket.on('msgSend', msg => {
+        console.log(`${msg.user} : ${msg.content}`)
+        io.sockets.in(msg.channel).emit('msgReceive', { content: msg.content, user: msg.user })
     })
 })
 
-http.listen(3000, () => {
-    console.log('listening on *:3000');
-})
+http.listen(process.env.PORT || 3000)

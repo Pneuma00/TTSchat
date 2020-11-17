@@ -1,10 +1,15 @@
+const nickname = prompt('닉네임을 입력하세요.')
+const channel = prompt('접속할 채널을 입력하세요.')
+
 const socket = io()
 
+socket.emit('joinChannel', channel, { nickname: nickname })
+
 document.querySelector('#send').addEventListener('click', () => {
-    socket.emit('msgSend', { content: document.querySelector('#msg').value })
+    socket.emit('msgSend', { user: nickname, channel: channel, content: document.querySelector('#msg').value })
     document.querySelector('#msg').value = ''
 })
 
-socket.on('msgReceive', data => {
-    document.querySelector('#chat').value += data.content + '\n'
+socket.on('msgReceive', msg => {
+    document.querySelector('#chat').value += `${msg.user} : ${msg.content}\n`
 })
