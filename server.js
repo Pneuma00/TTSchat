@@ -10,21 +10,30 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', socket => {
+    const user = {
+        id: socket.id,
+        nickname: ''
+    }
+
     console.log('A user connected')
 
     socket.on('disconnect', () => {
         console.log('User disconnected')
     })
 
-    socket.on('joinChannel', (channel, user) => {
-        socket.join(channel)
-        console.log(`${user.nickname} joined ${channel} channel.`)
-        io.to(channel).emit('userJoinedChannel', { nickname: user.nickname })
+    socket.on('join', nickname => {
+        if (typeof nickname !== 'string') return
+        user.nickname = nickname
+
+        socket.join('chat')
+        io.to('chat').emit('userJoined', nickname)
     })
 
-    socket.on('msgSend', msg => {
-        console.log(`${msg.user} : ${msg.content}`)
-        io.to(msg.channel).emit('msgReceive', { content: msg.content, user: msg.user })
+    socket.on('msgSend', content => {
+        if (typeof content !== 'string') return
+        
+        console.log(`${user.nickname} : ${content}`)
+        io.to('chat').emit('msgReceive', content, user.nickname)
     })
 })
 

@@ -1,12 +1,9 @@
-const nickname = prompt('닉네임을 입력하세요.')
-const channel = prompt('접속할 채널을 입력하세요.')
-
 const socket = io()
 
-socket.emit('joinChannel', channel, { nickname: nickname })
+socket.emit('join', prompt('닉네임을 입력하세요.'))
 
 const sendMsg = () => {
-    socket.emit('msgSend', { user: nickname, channel: channel, content: document.querySelector('#msg').value })
+    socket.emit('msgSend', document.querySelector('#msg').value)
     document.querySelector('#msg').value = ''
 }
 
@@ -15,12 +12,12 @@ document.querySelector('#msg').addEventListener('keydown', evt => {
     if (evt.keyCode === 13) sendMsg()
 })
 
-socket.on('msgReceive', msg => {
-    console.log(`${msg.user} : ${msg.content}`)
-    document.querySelector('#chat').value += `${msg.user} : ${msg.content}\n`
+socket.on('msgReceive', (content, nickname) => {
+    console.log(`${nickname} : ${content}`)
+    document.querySelector('#chat').value += `${nickname} : ${content}\n`
 })
 
-socket.on('userJoinedChannel', user => {
-    console.log(`${user.nickname} joined`)
-    document.querySelector('#chat').value += `${user.nickname} joined.\n`
+socket.on('userJoined', nickname => {
+    console.log(nickname + ' joined')
+    document.querySelector('#chat').value += nickname + ' joined.\n'
 })
