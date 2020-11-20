@@ -11,6 +11,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', socket => {
     const id = socket.id
+    const ip = socket.request.connection.remoteAddress
     let username = ''
     let rateGauge = 0
 
@@ -18,10 +19,10 @@ io.on('connection', socket => {
         if (rateGauge > 0) rateGauge -= 1
     }, 100)
 
-    console.log(`A user connected (ID: ${id})`)
+    console.log(`A user connected (ID: ${id}, IP: ${ip})`)
 
     socket.on('disconnect', () => {
-        console.log(`User disconnected (ID: ${id})`)
+        console.log(`User disconnected (ID: ${id}, IP: ${ip})`)
 
         io.to('chat').emit('userLeft', username)
         clearInterval(rateDecreaser)
