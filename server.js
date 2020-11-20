@@ -24,6 +24,7 @@ io.on('connection', socket => {
     })
 
     socket.on('join', nickname => {
+        if (user.nickname !== '') return
         if (typeof nickname !== 'string') return
         user.nickname = nickname
 
