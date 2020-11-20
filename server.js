@@ -10,34 +10,41 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', socket => {
-    const user = {
-        id: socket.id,
-        nickname: ''
-    }
+    const id = socket.id
+    let username = ''
+    let rateGauge = 0
 
-    console.log(`A user connected (ID: ${user.id})`)
+    const rateDecreaser = setInterval(() => {
+        if (rateGauge > 0) rateGauge -= 1
+    }, 100)
+
+    console.log(`A user connected (ID: ${id})`)
 
     socket.on('disconnect', () => {
-        console.log(`User disconnected (ID: ${user.id})`)
+        console.log(`User disconnected (ID: ${id})`)
 
-        io.to('chat').emit('userLeft', user.nickname)
+        io.to('chat').emit('userLeft', username)
+        clearInterval(rateDecreaser)
     })
 
     socket.on('join', nickname => {
-        if (user.nickname !== '') return
+        if (username !== '') return
         if (typeof nickname !== 'string') return
-        user.nickname = nickname
+        username = nickname
 
         socket.join('chat')
-        io.to('chat').emit('userJoined', nickname)
+        io.to('chat').emit('userJoined', username)
     })
 
     socket.on('msgSend', content => {
+        if (rateGauge > 100) return
         if (typeof content !== 'string') return
         if (content === '') return
 
-        console.log(`${user.nickname} : ${content}`)
-        io.to('chat').emit('msgReceive', content, user.nickname)
+        rateGauge += 25
+
+        console.log(`${username} : ${content}`)
+        io.to('chat').emit('msgReceive', content, username)
     })
 })
 
