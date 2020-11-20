@@ -33,6 +33,7 @@ io.on('connection', socket => {
 
     socket.on('msgSend', content => {
         if (typeof content !== 'string') return
+        if (content === '') return
 
         console.log(`${user.nickname} : ${content}`)
         io.to('chat').emit('msgReceive', content, user.nickname)
