@@ -15,10 +15,12 @@ io.on('connection', socket => {
         nickname: ''
     }
 
-    console.log('A user connected')
+    console.log(`A user connected (ID: ${user.id})`)
 
     socket.on('disconnect', () => {
-        console.log('User disconnected')
+        console.log(`User disconnected (ID: ${user.id})`)
+
+        io.to('chat').emit('userLeft', user.nickname)
     })
 
     socket.on('join', nickname => {
@@ -31,7 +33,7 @@ io.on('connection', socket => {
 
     socket.on('msgSend', content => {
         if (typeof content !== 'string') return
-        
+
         console.log(`${user.nickname} : ${content}`)
         io.to('chat').emit('msgReceive', content, user.nickname)
     })
