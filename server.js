@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 
 io.on('connection', socket => {
     const id = socket.id
-    const ip = socket.request.connection.remoteAddress
+    const ip = socket.handshake.address.address
     let username = ''
     let rateGauge = 0
 
